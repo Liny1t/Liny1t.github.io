@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta http-equiv="x-ua-compatible" content="ie=edge" />
+  <title>LIN-2</title>
+  <!-- MDB icon -->
+  <link rel="icon" href="../img/mdb-favicon.ico" type="image/x-icon" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css" />
+  <!-- Google Fonts Roboto -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" />
+  <!-- MDB -->
+  <link rel="stylesheet" href="../css/mdb.min.css" />
+  <link rel="stylesheet" href="../css/tab2.css" />
+
+
+</head>
+
+<body style="background-color:antiquewhite">
+
+  <div id="sys">
+
+    <!-- Background image -->
+    <!-- <div class="bg-image" style="background-image: url('https://mdbootstrap.com/img/Photos/Others/images/76.jpg');
+       height: 100vh">
+    </div> -->
+    <!-- Background image -->
+
+    <!-- Tabs navs -->
+    <ul class="nav nav-tabs mb-3" id="ex1" role="tablist">
+      <li class="nav-item" role="presentation">
+        <a class="nav-link active" id="ex1-tab-1" data-mdb-toggle="tab" href="#ex1-tabs-1" role="tab"
+          aria-controls="ex1-tabs-1" aria-selected="true">图书管理</a>
+      </li>
+      <li class="nav-item" role="presentation">
+        <a class="nav-link" id="ex1-tab-2" data-mdb-toggle="tab" href="#ex1-tabs-2" role="tab"
+          aria-controls="ex1-tabs-2" aria-selected="false">图书封面</a>
+      </li>
+      <li class="nav-item" role="presentation">
+        <a class="nav-link" id="ex1-tab-3" data-mdb-toggle="tab" href="#ex1-tabs-3" role="tab"
+          aria-controls="ex1-tabs-3" aria-selected="false">图书借阅记录</a>
+      </li>
+
+      <li class="nav-item" role="presentation">
+        <a class="nav-link" id="ex1-tab-4" data-mdb-toggle="tab" href="#ex1-tabs-4" role="tab"
+          aria-controls="ex1-tabs-4" aria-selected="false">图书借阅数量柱形图</a>
+      </li>
+
+    </ul>
+    <!-- Tabs navs -->
+
+    <!-- Tabs content -->
+    <div class="tab-content" id="ex1-content">
+
+      <!-- tab1图书管理界面 -->
+      <div class="tab-pane fade show active" id="ex1-tabs-1" role="tabpanel" aria-labelledby="ex1-tab-1">
+
+        <h2><span class="badge bg-primary" style="display:block;margin:0 auto">图书信息及其管理界面</span></h2>
+        <br><br>
+        <div class="input-group">
+          <input v-model="tmp" type="search" class="form-control rounded"
+            placeholder="输入图书相关信息如：编号/书名/出版社/作者/价格 并点击右侧按钮查询相关信息" aria-label="Search" aria-describedby="search-addon" />
+          <button @click="search" type="button" data-mdb-toggle="modal" data-mdb-target="#tab1_search_modal"
+            class="btn btn-outline-primary">查询</button>
+        </div>
+        <!-- 表格信息 -->
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">编号</th>
+              <th scope="col">书名</th>
+              <th scope="col">出版社</th>
+              <th scope="col">作者</th>
+              <th scope="col">价格¥</th>
+              <th scope="col">删除/修改</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(item,index) in book_info">
+              <th scope="row">{{item.bid}}</th>
+              <td>{{item.bname}}</td>
+              <td>{{item.publisher}}</td>
+              <td>{{item.author}}</td>
+              <td>{{item.price}}</td>
+              <td>
+                <button type="button" class="btn btn-warning" data-mdb-toggle="modal"
+                  data-mdb-target="#tab1_remove_modal" @click="f_remove(index)">删除</button>
+                <button type="button" class="btn btn-primary" data-mdb-toggle="modal"
+                  data-mdb-target="#tab1_change_modal" @click="f_change(index)">修改</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <br>
+        <button type="button" data-mdb-toggle="modal" data-mdb-target="#tab1_add_modal" class="btn btn-info"
+          style="display:block;margin:0 auto">添加图书信息</button>
+        <!-- <div>{{tmp}}</div> -->
+        <!-- 表格信息 -->
+      </div>
+      <!-- 删除模块 -->
+      <div class="modal fade" id="tab1_remove_modal" data-mdb-backdrop="static" data-mdb-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="staticBackdropLabel">删除选项卡</h5>
+              <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body"> 确定要删除当前图书信息？</div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal" @click="remove">确定</button>
+              <button type="button" class="btn btn-primary" data-mdb-dismiss="modal">取消</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 删除模块 -->
+
+      <!-- 修改模块 -->
+      <div class="modal fade" id="tab1_change_modal" data-mdb-backdrop="static" data-mdb-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="staticBackdropLabel">修改选项卡</h5>
+              <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <!-- <div class="modal-body"> 修改当前图书信息？</div> -->
+            <br>
+            <span>编号</span>
+            <input type="text" v-model="bid">
+            <br>
+            <span>书名</span>
+            <input type="text" v-model="bname">
+            <br>
+            <span>出版社</span>
+            <input type="text" v-model="publisher">
+            <br>
+            <span>作者</span>
+            <input type="text" v-model="author">
+            <br>
+            <span>价格</span>
+            <input type="text" v-model="price">
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal" @click="change">确定</button>
+              <button type="button" class="btn btn-primary" data-mdb-dismiss="modal">取消</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 修改模块 -->
+
+      <!-- 查询结果显示模块 -->
+      <div class="modal fade" id="tab1_search_modal" data-mdb-backdrop="static" data-mdb-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="staticBackdropLabel">查询结果如下</h5>
+              <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">编号</th>
+                  <th scope="col">书名</th>
+                  <th scope="col">出版社</th>
+                  <th scope="col">作者</th>
+                  <th scope="col">价格¥</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(item,index) in backup">
+                  <th scope="row">{{item.bid}}</th>
+                  <td>{{item.bname}}</td>
+                  <td>{{item.publisher}}</td>
+                  <td>{{item.author}}</td>
+                  <td>{{item.price}}</td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" data-mdb-dismiss="modal">关闭</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 查询结果模块 -->
+
+      <!-- 增加模块 -->
+      <div class="modal fade" id="tab1_add_modal" data-mdb-backdrop="static" data-mdb-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="staticBackdropLabel">添加选项卡</h5>
+              <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <br>
+            <span>编号</span>
+            <input type="text" v-model="bid">
+            <br>
+            <span>书名</span>
+            <input type="text" v-model="bname">
+            <br>
+            <span>出版社</span>
+            <input type="text" v-model="publisher">
+            <br>
+            <span>作者</span>
+            <input type="text" v-model="author">
+            <br>
+            <span>价格</span>
+            <input type="text" v-model="price">
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal" @click="add">确定</button>
+              <button type="button" class="btn btn-primary" data-mdb-dismiss="modal">取消</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 增加模块 -->
+      <!-- tab1图书管理界面 -->
+
+      <!-- tab2 -->
+      <div class="tab-pane fade" id="ex1-tabs-2" role="tabpanel" aria-labelledby="ex1-tab-2">
+        <h2><span class="badge bg-primary" style="display:block;margin:0 auto">图书封面展示</span></h2>
+        <div class="center">
+          <img :src="imgList[index2]" alt="" />
+          <a href="javascript:void(0)" @click="prev" class="left" v-show="index2>0">
+            <img src="../images/prev.png" alt="" />
+          </a>
+          <a href="javascript:void(0)" @click="next" class="right" v-show="index2<imgList.length-1">
+            <img src="../images/next.png" alt="" />
+          </a>
+        </div>
+      </div>
+      <!-- tab2 -->
+
+      <div class="tab-pane fade" id="ex1-tabs-3" role="tabpanel" aria-labelledby="ex1-tab-3">
+        <h2><span type="button" class="btn btn-secondary" style="display:block;margin:0 auto">
+            图书借阅记录</span></h2>
+
+        <div class="form-outline mb-4">
+          <input type="text" class="form-control" id="datatable-search-input" />
+          <label class="form-label" for="datatable-search-input">搜索</label>
+        </div>
+        <div id="datatable">
+        </div>
+
+
+
+      </div>
+
+      <div class="tab-pane fade" id="ex1-tabs-4" role="tabpanel" aria-labelledby="ex1-tab-4">
+        <h2><span class="btn btn-info" style="display:block;margin:0 auto">本周图书借阅数量柱形图</span></h2>
+        <canvas id="chart-options-example"></canvas>
+      </div>
+    </div>
+    <!-- Tabs content -->
+
+  </div>
+
+  <script type="text/javascript" src="../js/vue.js"></script>
+  <script type="text/javascript" src="../js/main.js"></script>
+  <script type="text/javascript" src="../js/mdb.min.js"></script>
+  <script type="text/javascript" src="../js/tab4.js"></script>
+  <script type="text/javascript" src="../js/tab3.js"></script>
+
+
+</body>
+
+</html>
